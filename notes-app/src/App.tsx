@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import { supabase } from './lib/supabase'
 import {Routes, Route} from 'react-router-dom'
@@ -10,8 +9,10 @@ function App() {
   console.log('Supabase:', supabase)
 
   return (
-    <>
-    </>
+    <Routes>
+      <Route path='/login' element={<div>Login Page coming soon</div>} />
+      <Route path ='/' element={<div>Home Page coming soon</div>} />
+    </Routes>
   )
 }
 
