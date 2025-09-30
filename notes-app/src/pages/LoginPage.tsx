@@ -1,10 +1,28 @@
+import { Navigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function LoginPage(){
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const {data: {session}} = await supabase.auth.getSession()
+            setIsAuthenticated(!!session)
+        }
+        checkSession()
+    }, [])
+
+    if (isAuthenticated === null) {
+        return <div>Loading...</div>
+    }
+
+    if (isAuthenticated) {
+        return <Navigate to="/" />
+    }
 
     const handleLogin = async(e: React.FormEvent) => {
         e.preventDefault()
@@ -18,7 +36,6 @@ export function LoginPage(){
                     emailRedirectTo: `${window.location.origin}/`
                 }
             })
-
             if (error) {
                 setMessage(`Error: ${error.message}`)
             } else {
