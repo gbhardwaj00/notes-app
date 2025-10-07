@@ -3,6 +3,7 @@ import { LoginPage } from './pages/LoginPage'
 import { SignupPage } from './pages/SignupPage'
 import {AuthGate} from './components/AuthGate'
 import {Routes, Route} from 'react-router-dom'
+import { supabase } from './lib/supabase'
 
 function App() {
 
@@ -14,7 +15,18 @@ function App() {
         path ='/' 
         element={
           <AuthGate>
-            <div>Home Page coming soon</div>
+            <div> 
+              <h1>
+                Welcome! You're logged in
+              </h1>
+              <button
+                onClick={async () => 
+                  await supabase.auth.signOut()}
+                  // AuthGate will redirect to login if the user is not authenticated
+                >
+                Logout
+              </button>
+            </div>
           </AuthGate>} 
         />
     </Routes>

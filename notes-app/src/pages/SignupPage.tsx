@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export function SignupPage() {
     const [email, setEmail] = useState("");
@@ -9,6 +9,25 @@ export function SignupPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState("");
     const [name, setName] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+
+    useEffect(() => {
+        // Check if the user is authenticated
+        const checkSession = async () => {
+            const {data: {session}} = await supabase.auth.getSession()
+            setIsAuthenticated(!!session)
+        }
+        checkSession()
+    }, [])
+
+    // Show loading while checking
+    if (isAuthenticated === null) {
+        return <div>Loading...</div>
+    }
+
+    if (isAuthenticated) {
+        return <Navigate to="/" replace />
+    }
 
     const validatePassword = (password: string) => {
         if (password.length < 8) return "Password must be at least 8 characters long";

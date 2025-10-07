@@ -16,6 +16,12 @@ export function LoginPage(){
             setIsAuthenticated(!!session)
         }
         checkSession()
+        // Listen for auth state changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            setIsAuthenticated(!!session)
+        })
+    
+        return () => subscription.unsubscribe()
     }, [])
 
     // Show loading while checking
@@ -41,7 +47,7 @@ export function LoginPage(){
             if (error) {
                 setMessage(`Error: ${error.message}`)
             } else {
-                setMessage('Check your email for a login link')
+                // The auth state change will trigger the redirect to the home page
             }
         } catch (error) {
             setMessage('Error: ' + error)
